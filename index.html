@@ -5,275 +5,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ETF 투자 성향 테스트 (MBTI)</title>
     <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js" integrity="sha384-l+xbElFSnP5k7wFIFw2ywUt4b+HrQeR/i8gJ0Yhnd/y2sk3Ol362XACKx3L0pS4R" crossorigin="anonymous"></script>
-    
     <style>
-        /* [스타일 시트] */
-        :root {
-            --primary-color: #007bff;
-            --bg-color: #f1f3f5;
-            --text-color: #333;
-            --accent-color: #e7f1ff;
-            --kakao-color: #FEE500; /* 카카오 노란색 */
-        }
-
-        body {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            padding-bottom: 100px; /* 하단 광고 여백 */
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-        }
-
-        .container {
-            background: white;
-            width: 100%;
-            max-width: 600px;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            text-align: center;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-
+        :root { --primary-color: #007bff; --bg-color: #f1f3f5; --text-color: #333; --accent-color: #e7f1ff; --kakao-color: #FEE500; }
+        body { font-family: 'Pretendard', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; padding-bottom: 100px; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; }
+        .container { background: white; width: 100%; max-width: 600px; padding: 30px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; margin-top: 20px; margin-bottom: 20px; }
         h1 { font-size: 1.6rem; margin-bottom: 10px; color: #2c3e50; font-weight: 800; }
         .subtitle { color: #666; font-size: 1rem; margin-bottom: 20px; line-height: 1.5; }
-
-        .disclaimer {
-            font-size: 0.8rem;
-            color: #888;
-            background-color: #f8f9fa;
-            padding: 12px;
-            border-radius: 10px;
-            margin: 20px 0;
-            line-height: 1.4;
-            border: 1px solid #eee;
-        }
-
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 16px;
-            margin: 10px 0;
-            border: 2px solid #e9ecef;
-            border-radius: 15px;
-            background: white;
-            font-size: 1.05rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: #495057;
-            font-weight: 600;
-        }
-        .btn:hover {
-            background-color: var(--accent-color);
-            border-color: var(--primary-color);
-            color: var(--primary-color);
-            transform: translateY(-2px);
-        }
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            box-shadow: 0 4px 6px rgba(0,123,255,0.3);
-        }
-        .btn-primary:hover { 
-            background-color: #0056b3; 
-            color: white;
-            box-shadow: 0 6px 8px rgba(0,123,255,0.4);
-        }
-
-        /* [추가] 공유 버튼 스타일 */
-        .share-container {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            margin-bottom: 10px;
-        }
-        .btn-share {
-            flex: 1;
-            padding: 15px;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: opacity 0.2s;
-        }
-        .btn-kakao {
-            background-color: var(--kakao-color);
-            color: #3c1e1e; /* 카카오 갈색 글씨 */
-        }
-        .btn-link {
-            background-color: #495057;
-            color: white;
-        }
-        .btn-share:hover { opacity: 0.9; }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-            40% {transform: translateY(-5px);}
-            60% {transform: translateY(-3px);}
-        }
-
-        .info-section {
-            text-align: left;
-            margin-top: 50px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-        .info-title {
-            font-size: 1.3rem;
-            color: #333;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: 700;
-        }
-        .info-article {
-            background-color: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-            transition: transform 0.2s;
-        }
-        .info-article:hover { transform: translateY(-2px); }
+        .disclaimer { font-size: 0.8rem; color: #888; background-color: #f8f9fa; padding: 12px; border-radius: 10px; margin: 20px 0; border: 1px solid #eee; }
+        .btn { display: block; width: 100%; padding: 16px; margin: 10px 0; border: 2px solid #e9ecef; border-radius: 15px; background: white; font-size: 1.05rem; cursor: pointer; color: #495057; font-weight: 600; }
+        .btn:hover { background-color: var(--accent-color); border-color: var(--primary-color); color: var(--primary-color); transform: translateY(-2px); }
+        .btn-primary { background-color: var(--primary-color); color: white; border: none; box-shadow: 0 4px 6px rgba(0,123,255,0.3); }
+        .btn-primary:hover { background-color: #0056b3; box-shadow: 0 6px 8px rgba(0,123,255,0.4); }
+        .share-container { display: flex; gap: 10px; margin-top: 20px; margin-bottom: 10px; }
+        .btn-share { flex: 1; padding: 15px; border-radius: 12px; font-size: 1rem; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-kakao { background-color: var(--kakao-color); color: #3c1e1e; }
+        .btn-link { background-color: #495057; color: white; }
+        .info-section { text-align: left; margin-top: 50px; padding-top: 20px; border-top: 1px solid #eee; }
+        .info-title { font-size: 1.3rem; color: #333; margin-bottom: 20px; text-align: center; font-weight: 700; }
+        .info-article { background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 20px; padding: 25px; margin-bottom: 20px; }
         .info-article h3 { font-size: 1.15rem; color: var(--primary-color); margin-top: 0; margin-bottom: 15px; font-weight: 700; }
-        .info-article p { font-size: 0.95rem; color: #555; line-height: 1.7; word-break: keep-all; margin-bottom: 15px; }
-        .info-article strong { color: #333; background: linear-gradient(to top, #ffeb3b 20%, transparent 20%); font-weight: bold; }
-
-        .progress-container { width: 100%; background-color: #e9ecef; border-radius: 10px; margin-bottom: 30px; height: 10px; overflow: hidden; }
-        .progress-bar { height: 100%; background-color: var(--primary-color); width: 0%; transition: width 0.3s; }
-
+        .info-article p { font-size: 0.95rem; color: #555; line-height: 1.7; margin-bottom: 15px; }
+        .hidden { display: none; }
         .result-title { font-size: 1.8rem; font-weight: 800; color: var(--primary-color); margin-top: 20px; margin-bottom: 10px; }
         .result-desc { font-size: 0.95rem; line-height: 1.6; color: #444; text-align: left; background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 10px;}
-        
         .tag-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 30px; }
         .tag { background-color: var(--accent-color); color: var(--primary-color); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
-
         .etf-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px #eee; }
         .etf-table th, .etf-table td { padding: 14px; text-align: left; border-bottom: 1px solid #eee; }
         .etf-table th { background-color: #f8f9fa; font-weight: bold; text-align: center; color: #495057;}
         .etf-table td.center { text-align: center; font-weight: bold; color: #666; width: 18%; vertical-align: middle; }
         .etf-name { font-weight: bold; color: #333; display: block; margin-bottom: 5px; font-size: 1rem;}
         .etf-detail { font-size: 0.85rem; color: #666; line-height: 1.4; }
-
+        .progress-container { width: 100%; background-color: #e9ecef; border-radius: 10px; margin-bottom: 30px; height: 10px; overflow: hidden; }
+        .progress-bar { height: 100%; background-color: var(--primary-color); width: 0%; transition: width 0.3s; }
         .ad-box { width: 100%; min-height: 100px; background-color: #f8f9fa; border: 1px dashed #ced4da; display: flex; justify-content: center; align-items: center; color: #adb5bd; margin: 30px 0; font-size: 0.85rem; border-radius: 10px; }
-
         .fixed-bottom-ad { position: fixed; bottom: 0; left: 0; width: 100%; height: 70px; background-color: #fff; border-top: 1px solid #e0e0e0; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 9999; display: flex; justify-content: center; align-items: center; }
-        .fixed-ad-placeholder { font-size: 0.8rem; color: #aaa; }
-
-        .hidden { display: none; }
     </style>
 </head>
 <body>
-
     <div class="container">
         <div id="start-screen">
             <h1>💰 ETF 투자 성향 테스트</h1>
             <p class="subtitle">나에게 딱 맞는 ETF는 무엇일까?<br>7가지 질문으로 알아보는 나의 투자 MBTI</p>
-            
-            <div style="margin: 20px 0;">
-                <img src="https://cdn-icons-png.flaticon.com/512/2910/2910312.png" alt="chart icon" style="width:100px; opacity:0.9;">
-            </div>
-            
-            <button class="btn btn-primary" onclick="startTest()" style="margin-bottom: 20px; padding: 18px; font-size: 1.1rem; box-shadow: 0 5px 15px rgba(0,123,255,0.3);">
-                🚀 테스트 시작하기
-            </button>
-
-            <p class="disclaimer">
-                ⚠️ 결과는 단순 참고용이며 투자의 책임은 본인에게 있습니다.
-            </p>
-
-            <div style="margin-top: 40px; margin-bottom: 10px; color: #aaa; font-size: 0.9rem; animation: bounce 2s infinite;">
-                ⬇️ 현명한 투자 가이드 읽어보기
-            </div>
-
+            <div style="margin: 20px 0;"><img src="https://cdn-icons-png.flaticon.com/512/2910/2910312.png" alt="chart icon" style="width:100px; opacity:0.9;"></div>
+            <button class="btn btn-primary" onclick="startTest()" style="margin-bottom: 20px; padding: 18px; font-size: 1.1rem; box-shadow: 0 5px 15px rgba(0,123,255,0.3);">🚀 테스트 시작하기</button>
+            <p class="disclaimer">⚠️ 결과는 단순 참고용이며 투자의 책임은 본인에게 있습니다.</p>
             <div class="info-section">
                 <h2 class="info-title">📈 현명한 투자자가 되기 위한 가이드</h2>
-                
-                <div class="info-article">
-                    <h3>1. 주식 초보자, 왜 'ETF'로 시작해야 할까요?</h3>
-                    <p>주식 투자를 처음 시작하는 분들이 가장 많이 하는 고민은 "도대체 어떤 종목을 사야 할까?"입니다. 이런 고민을 한 방에 해결해 주는 도구가 바로 <strong>ETF(상장지수펀드)</strong>입니다.</p>
-                    <p><strong>첫째, 뷔페 같은 분산 투자 효과입니다.</strong><br>ETF는 수십 개에서 수백 개의 우량 기업을 한 바구니에 담은 '종합 선물 세트'입니다. 예를 들어 'KODEX 200' 1주를 사면 대한민국 대표 기업 200개에 분산 투자하는 효과를 얻습니다.</p>
-                    <p><strong>둘째, 투명하고 저렴합니다.</strong><br>일반 펀드보다 수수료가 훨씬 저렴하며, 스마트폰으로 언제든지 즉시 사고팔 수 있습니다. 초보자가 시장의 성장을 믿고 장기 투자하기에 가장 완벽한 도구입니다.</p>
-                </div>
-
-                <div class="info-article">
-                    <h3>2. 잠자는 동안에도 돈이 벌리는 '배당과 복리의 마법'</h3>
-                    <p>부자가 되는 공식은 간단합니다. <strong>'좋은 자산을 사서, 거기서 나오는 수익을 다시 재투자하는 것'</strong>입니다. 이것이 바로 눈덩이 효과(Snowball Effect)입니다.</p>
-                    <p>많은 분들이 차익 실현만 생각하지만, 진정한 고수들은 <strong>'배당(Dividend)'</strong>에 주목합니다. 기업이 번 돈을 배당으로 받아 다시 그 주식을 사세요. 주가가 횡보하더라도 주식 수량이 늘어나면 내 자산은 기하급수적으로 불어납니다.</p>
-                </div>
-
-                <div class="info-article">
-                    <h3>3. 수익률 10%보다 중요한 '절세 계좌' 삼총사</h3>
-                    <p>투자를 잘하는 것만큼 중요한 것이 <strong>'세금을 아끼는 것'</strong>입니다. 해외 ETF 투자 시 아래 3가지 계좌는 필수입니다.</p>
-                    <p><strong>① 중개형 ISA (만능 통장):</strong> 200~400만 원까지 수익 비과세 혜택이 있습니다. 일반 계좌 대비 세금을 획기적으로 줄일 수 있습니다.</p>
-                    <p><strong>② 연금저축펀드:</strong> 연말정산 시 최대 16.5% 세액 공제를 받아, 돈을 넣기만 해도 확정 수익을 얻는 셈입니다.</p>
-                    <p><strong>③ IRP (퇴직연금):</strong> 연금저축과 합산하여 최대 900만 원까지 세액 공제를 받을 수 있어 노후 준비에 필수적입니다.</p>
-                </div>
+                <div class="info-article"><h3>1. 주식 초보자, 왜 'ETF'인가요?</h3><p>개별 기업의 악재 걱정 없이, 수십~수백 개의 우량 기업을 한 바구니에 담아 시장 전체의 성장에 투자할 수 있는 가장 안전한 도구입니다.</p></div>
+                <div class="info-article"><h3>2. 복리의 마법</h3><p>좋은 자산을 사서 배당금을 다시 재투자하세요. 주가가 횡보하더라도 자산은 눈덩이처럼 불어납니다.</p></div>
+                <div class="info-article"><h3>3. 절세 계좌 필수</h3><p>ISA, 연금저축펀드, IRP 계좌를 활용해 세금을 아끼고 수익률을 극대화하세요.</p></div>
             </div>
-
-            <footer style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #ccc; font-size: 0.75rem;">
-                &copy; 2024 ETF MBTI Test. All rights reserved.
-            </footer>
+            <footer style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #ccc; font-size: 0.75rem;">&copy; 2024 ETF MBTI Test. All rights reserved.</footer>
         </div>
 
         <div id="quiz-screen" class="hidden">
-            <div class="progress-container">
-                <div class="progress-bar" id="progress-bar"></div>
-            </div>
-            <h2 id="question-text" style="font-size: 1.3rem; margin-bottom: 40px; word-break: keep-all; font-weight: 700;">질문 내용</h2>
-            <button class="btn" id="btn-a" onclick="selectOption('A')">선택지 A</button>
-            <button class="btn" id="btn-b" onclick="selectOption('B')">선택지 B</button>
+            <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+            <h2 id="question-text" style="font-size: 1.3rem; margin-bottom: 40px; word-break: keep-all; font-weight: 700;">질문</h2>
+            <button class="btn" id="btn-a" onclick="selectOption('A')">A</button>
+            <button class="btn" id="btn-b" onclick="selectOption('B')">B</button>
         </div>
 
         <div id="loading-screen" class="hidden">
-            <div style="margin-top: 80px;">
-                <h2 style="color:var(--primary-color);">⏳ 분석 중입니다...</h2>
-                <p style="color:#666;">당신의 투자 성향을 파악하고 있습니다.</p>
-            </div>
+            <div style="margin-top: 80px;"><h2 style="color:var(--primary-color);">⏳ 분석 중입니다...</h2><p style="color:#666;">당신의 투자 성향을 파악하고 있습니다.</p></div>
         </div>
 
         <div id="result-screen" class="hidden">
             <p class="subtitle" style="margin-bottom: 5px;">당신의 투자 유형은?</p>
-            <div id="result-content">
-                </div>
-            
+            <div id="result-content"></div>
             <div class="share-container">
-                <button class="btn-share btn-kakao" onclick="shareKakao()">
-                    🟡 카카오톡 공유
-                </button>
-                <button class="btn-share btn-link" onclick="copyLink()">
-                    🔗 링크 복사
-                </button>
+                <button class="btn-share btn-kakao" onclick="shareKakao()">🟡 카카오톡 공유</button>
+                <button class="btn-share btn-link" onclick="copyLink()">🔗 링크 복사</button>
             </div>
-
-            <div class="ad-box">
-                구글 애드센스 광고 영역
-            </div>
-            
+            <div class="ad-box">구글 애드센스 광고 영역</div>
             <button class="btn btn-primary" onclick="location.reload()">테스트 다시하기</button>
         </div>
     </div>
 
-    <div class="fixed-bottom-ad">
-        <div class="fixed-ad-placeholder">
-            하단 고정 광고 영역 (Sticky Ad)
-        </div>
-    </div>
+    <div class="fixed-bottom-ad"><div class="fixed-ad-placeholder">하단 고정 광고 영역</div></div>
 
- <script>
-        /* [자바스크립트] 로직 및 데이터 */
+    <script>
         const questions = [
             { q: "자고 일어났더니 주식이 -15%가 되었습니다. 당신의 심정은?", a: "망했다.. 당장 팔아서 남은 돈이라도 건진다.", b: "오히려 좋아! 세일 기간이다. 추가 매수!", type: "Risk" },
             { q: "보너스 1,000만 원이 생겼습니다. 어디에 투자할까요?", a: "매달 치킨값 들어오는 안전한 배당주", b: "10년 뒤 대박 날 혁신 기술주 몰빵", type: "Style" },
@@ -292,15 +103,10 @@
             "A-K-I": { title: "🦁 공격적인 현금 채굴러", tags: ["#금융주", "#시세차익", "#고배당", "#야수의배당"], desc: "단순한 이자는 만족 못 합니다. 주가 상승기에 큰 수익을 내면서도, 쏠쏠한 배당금까지 챙기려는 욕심 많은 투자자입니다.", etf: [{mkt:"국내",name:"TIGER 은행고배당플러스",desc:"기존 은행주보다 배당 매력이 더 높은 종목을 선별했습니다."},{mkt:"국내",name:"HANARO 200금융",desc:"밸류업 프로그램 수혜가 예상되는 금융 지주사에 투자합니다."},{mkt:"국내",name:"TIGER 증권",desc:"증시가 뜨거울 때 가장 탄력적으로 오르는 증권주에 투자합니다."}] },
             "A-K-G": { title: "🐯 불장의 야수 (K-Tiger)", tags: ["#2차전지", "#바이오", "#K-테크", "#하이리스크"], desc: "하이 리스크, 하이 리턴! 한국의 미래 먹거리가 될 주도 섹터(테마)에 집중 투자하여 시장 수익률을 압도하고자 합니다.", etf: [{mkt:"국내",name:"KODEX 2차전지산업",desc:"세계를 선도하는 한국의 배터리 기업에 집중 투자합니다."},{mkt:"국내",name:"TIGER Fn반도체TOP10",desc:"국내 반도체 대장주 비중을 극대화한 공격적인 ETF입니다."},{mkt:"국내",name:"KODEX 레버리지",desc:"(주의) 코스피200 지수 하루 등락폭의 2배를 추종합니다."}] },
             "A-W-I": { title: "🏎️ 배당 성장 가속러", tags: ["#월배당", "#커버드콜", "#테크배당", "#현금흐름"], desc: "지루한 건 싫습니다. 성장하는 기술주에서 배당을 받거나, 옵션 전략을 활용해 고배당을 노리는 스마트한 투자자입니다.", etf: [{mkt:"해외",name:"TIGER 미국배당+7%프리미엄",desc:"미국 배당주 + 옵션 매도 전략으로 추가 월 배당 수익을 만듭니다."},{mkt:"미국",name:"JEPI",desc:"(미국직투) 낮은 변동성과 높은 월 배당금으로 전 세계적으로 인기입니다."},{mkt:"미국",name:"JEPQ",desc:"(미국직투) 나스닥 기술주에 투자하면서 연 10% 수준의 배당을 줍니다."}] },
-            "A-W-G": { title: "🚀 나스닥 로켓 탑승객", tags: ["#빅테크", "#AI반도체", "#엔비디아", "#신인류"], desc: "세상을 바꾸는 혁신 기술에 열광합니다. 빅테크 기업의 폭발적인 성장을 믿으며, 단기 변동성은 쿨하게 넘깁니다.", etf: [{mkt:"해외",name:"TIGER 미국테크TOP10",desc:"애플, 엔비디아 등 미국 빅테크 상위 10개 기업에 압축 투자합니다."},{mkt:"해외",name:"TIGER 미국필라델피아반도체",desc:"AI 시대의 쌀, 반도체 산업에 투자합니다."},{mkt:"미국",name:"QQQ (또는 SOXX)",desc:"(미국직투) 나스닥 100 지수를 추종하는 기술주 투자의 교과서입니다."}] }
+            "A-W-G": { title: "🤖 나스닥 로켓 탑승객", tags: ["#빅테크", "#AI반도체", "#엔비디아", "#신인류"], desc: "세상을 바꾸는 혁신 기술에 열광합니다. 빅테크 기업의 폭발적인 성장을 믿으며, 단기 변동성은 쿨하게 넘깁니다.", etf: [{mkt:"해외",name:"TIGER 미국테크TOP10",desc:"애플, 엔비디아 등 미국 빅테크 상위 10개 기업에 압축 투자합니다."},{mkt:"해외",name:"TIGER 미국필라델피아반도체",desc:"AI 시대의 쌀, 반도체 산업에 투자합니다."},{mkt:"미국",name:"QQQ (또는 SOXX)",desc:"(미국직투) 나스닥 100 지수를 추종하는 기술주 투자의 교과서입니다."}] }
         };
 
-/* [2. 변수 설정] */
-        let currentStep = 0;
-        let scores = { Risk: 0, Geo: 0, Style: 0 };
-        let currentResultData = null; 
-
-        // DOM 요소
+        let currentStep = 0; let scores = { Risk: 0, Geo: 0, Style: 0 }; let currentResultData = null;
         const startScreen = document.getElementById("start-screen");
         const quizScreen = document.getElementById("quiz-screen");
         const loadingScreen = document.getElementById("loading-screen");
@@ -311,134 +117,34 @@
         const btnB = document.getElementById("btn-b");
         const resultContent = document.getElementById("result-content");
 
-        /* [3. 카카오톡 초기화] */
-        try {
-            Kakao.init('5c43a1e1c0daee679a9ab98273013ec2');
-            console.log("Kakao Initialized");
-        } catch(e) {
-            console.error("Kakao Init Failed", e);
-        }
+        // 카카오톡 초기화
+        try { Kakao.init('5c43a1e1c0daee679a9ab98273013ec2'); } catch(e) {}
 
-        /* [4. 테스트 로직 함수] */
-        function startTest() {
-            startScreen.classList.add("hidden");
-            quizScreen.classList.remove("hidden");
-            currentStep = 0;
-            scores = { Risk: 0, Geo: 0, Style: 0 };
-            showQuestion();
-        }
-
-        function showQuestion() {
-            const q = questions[currentStep];
-            const percent = ((currentStep) / questions.length) * 100;
-            progressBar.style.width = percent + "%";
-            questionText.innerText = `Q${currentStep + 1}. ${q.q}`;
-            btnA.innerText = q.a;
-            btnB.innerText = q.b;
-        }
-
-        function selectOption(choice) {
-            if (choice === 'B') scores[questions[currentStep].type]++;
-            currentStep++;
-            if (currentStep < questions.length) showQuestion();
-            else showLoading();
-        }
-
-        function showLoading() {
-            quizScreen.classList.add("hidden");
-            loadingScreen.classList.remove("hidden");
-            setTimeout(calculateResult, 1500);
-        }
-
+        function startTest() { startScreen.classList.add("hidden"); quizScreen.classList.remove("hidden"); currentStep = 0; scores = { Risk: 0, Geo: 0, Style: 0 }; showQuestion(); }
+        function showQuestion() { const q = questions[currentStep]; progressBar.style.width = ((currentStep) / questions.length) * 100 + "%"; questionText.innerText = `Q${currentStep + 1}. ${q.q}`; btnA.innerText = q.a; btnB.innerText = q.b; }
+        function selectOption(choice) { if (choice === 'B') scores[questions[currentStep].type]++; currentStep++; if (currentStep < questions.length) showQuestion(); else showLoading(); }
+        function showLoading() { quizScreen.classList.add("hidden"); loadingScreen.classList.remove("hidden"); setTimeout(calculateResult, 1500); }
         function calculateResult() {
-            loadingScreen.classList.add("hidden");
-            resultScreen.classList.remove("hidden");
-
-            const typeRisk = scores.Risk >= 2 ? "A" : "S";
-            const typeGeo = scores.Geo >= 1 ? "W" : "K"; 
-            const typeStyle = scores.Style >= 1 ? "G" : "I";
-            
-            // 결과 데이터 저장
+            loadingScreen.classList.add("hidden"); resultScreen.classList.remove("hidden");
+            const typeRisk = scores.Risk >= 2 ? "A" : "S"; const typeGeo = scores.Geo >= 1 ? "W" : "K"; const typeStyle = scores.Style >= 1 ? "G" : "I";
             currentResultData = results[typeRisk + "-" + typeGeo + "-" + typeStyle];
-            
-            // HTML 생성
             const tagHtml = currentResultData.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
-            const etfHtml = currentResultData.etf.map(item => `
-                <tr>
-                    <td class="center">${item.mkt}</td>
-                    <td>
-                        <span class="etf-name">${item.name}</span>
-                        <span class="etf-detail">${item.desc}</span>
-                    </td>
-                </tr>
-            `).join('');
-
-            resultContent.innerHTML = `
-                <div class="result-title">${currentResultData.title}</div>
-                <div class="result-desc">${currentResultData.desc}</div>
-                <div class="tag-container">${tagHtml}</div>
-                <h3 style="margin-top:30px; color:#333; font-weight:700;">📊 맞춤형 ETF 포트폴리오</h3>
-                <table class="etf-table">
-                    <thead>
-                        <tr>
-                            <th width="15%">시장</th>
-                            <th>추천 종목 및 핵심 특징</th>
-                        </tr>
-                    </thead>
-                    <tbody>${etfHtml}</tbody>
-                </table>
-            `;
+            const etfHtml = currentResultData.etf.map(item => `<tr><td class="center">${item.mkt}</td><td><span class="etf-name">${item.name}</span><span class="etf-detail">${item.desc}</span></td></tr>`).join('');
+            resultContent.innerHTML = `<div class="result-title">${currentResultData.title}</div><div class="result-desc">${currentResultData.desc}</div><div class="tag-container">${tagHtml}</div><h3 style="margin-top:30px; color:#333; font-weight:700;">📊 맞춤형 ETF 포트폴리오</h3><table class="etf-table"><thead><tr><th width="15%">시장</th><th>추천 종목 및 핵심 특징</th></tr></thead><tbody>${etfHtml}</tbody></table>`;
         }
-
-        /* [5. 공유 기능 함수] */
-        function copyLink() {
-            const url = window.location.href;
-            navigator.clipboard.writeText(url).then(() => {
-                alert("링크가 복사되었습니다!");
-            }).catch(err => {
-                alert("복사 실패. 주소창을 직접 복사해주세요.");
-            });
-        }
-
+        function copyLink() { navigator.clipboard.writeText(window.location.href).then(() => alert("링크가 복사되었습니다!")).catch(() => alert("복사 실패")); }
         function shareKakao() {
-            // 1. 결과 데이터가 준비되었는지 확인
-            if (!currentResultData) {
-                alert("결과가 생성되지 않았습니다. 테스트를 먼저 완료해주세요.");
-                return;
-            }
-
-            // 2. 카카오톡 초기화 확인
-            if (!window.Kakao || !Kakao.isInitialized()) {
-                alert("카카오톡 연결에 실패했습니다. (API 키 오류 또는 초기화 실패)");
-                return;
-            }
-
-            // 3. 공유하기 실행
-            try {
-                Kakao.Share.sendDefault({
-                    objectType: 'feed',
-                    content: {
-                        title: `나의 투자 성향은? ${currentResultData.title}`,
-                        description: currentResultData.desc,
-                        imageUrl: 'https://cdn-icons-png.flaticon.com/512/2910/2910312.png',
-                        link: {
-                            mobileWebUrl: window.location.href,
-                            webUrl: window.location.href,
-                        },
-                    },
-                    buttons: [
-                        {
-                            title: '테스트 결과 보기',
-                            link: {
-                                mobileWebUrl: window.location.href,
-                                webUrl: window.location.href,
-                            },
-                        },
-                    ],
-                });
-            } catch (err) {
-                alert("공유 실행 중 오류 발생: " + err);
-            }
+            if (!Kakao.isInitialized()) return alert("카카오톡 초기화 실패");
+            Kakao.Share.sendDefault({
+                objectType: 'feed',
+                content: {
+                    title: `나의 투자 성향은? ${currentResultData.title}`,
+                    description: currentResultData.desc,
+                    imageUrl: 'https://cdn-icons-png.flaticon.com/512/2910/2910312.png',
+                    link: { mobileWebUrl: window.location.href, webUrl: window.location.href },
+                },
+                buttons: [{ title: '테스트 결과 보기', link: { mobileWebUrl: window.location.href, webUrl: window.location.href }, }],
+            });
         }
     </script>
 </body>
