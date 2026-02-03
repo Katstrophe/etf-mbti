@@ -272,7 +272,7 @@
         </div>
     </div>
 
-    <script>
+ <script>
         /* [자바스크립트] 로직 및 데이터 */
         const questions = [
             { q: "자고 일어났더니 주식이 -15%가 되었습니다. 당신의 심정은?", a: "망했다.. 당장 팔아서 남은 돈이라도 건진다.", b: "오히려 좋아! 세일 기간이다. 추가 매수!", type: "Risk" },
@@ -297,7 +297,7 @@
 
         let currentStep = 0;
         let scores = { Risk: 0, Geo: 0, Style: 0 };
-        let currentResultData = null; // 공유를 위해 현재 결과 데이터 저장
+        let currentResultData = null;
 
         const startScreen = document.getElementById("start-screen");
         const quizScreen = document.getElementById("quiz-screen");
@@ -309,13 +309,10 @@
         const btnB = document.getElementById("btn-b");
         const resultContent = document.getElementById("result-content");
 
-        // [중요] 카카오톡 초기화 (본인의 JavaScript 키를 여기에 넣으세요)
-        // 키 발급 전에는 이 부분이 작동하지 않아도 링크 복사는 됩니다.
+        // [중요] 카카오톡 초기화 (키 확인 완료됨)
         try {
-            Kakao.init('5c43a1e1c0daee679a9ab98273013ec2'); // <-- 여기에 키 입력
-        } catch(e) {
-            console.log("카카오키가 설정되지 않았습니다.");
-        }
+            Kakao.init('5c43a1e1c0daee679a9ab98273013ec2');
+        } catch(e) {}
 
         function startTest() {
             startScreen.classList.add("hidden");
@@ -355,7 +352,6 @@
             const typeGeo = scores.Geo >= 1 ? "W" : "K"; 
             const typeStyle = scores.Style >= 1 ? "G" : "I";
             
-            // 결과를 전역 변수에 저장 (공유 기능을 위해)
             currentResultData = results[typeRisk + "-" + typeGeo + "-" + typeStyle];
             
             const tagHtml = currentResultData.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
@@ -391,23 +387,15 @@
         function copyLink() {
             const url = window.location.href;
             navigator.clipboard.writeText(url).then(() => {
-                alert("링크가 복사되었습니다! 친구들에게 공유해보세요.");
+                alert("링크가 복사되었습니다!");
             }).catch(err => {
-                console.error('복사 실패:', err);
+                alert("복사 실패. 주소창을 직접 복사해주세요.");
             });
         }
 
-// [수정된 디버깅용 공유 함수]
+        // [기능] 카카오톡 공유 (알림창 제거한 깔끔한 버전)
         function shareKakao() {
-            // 1. 버튼 클릭 확인
-            alert("버튼이 눌렸습니다!");
-
-            if (!Kakao.isInitialized()) {
-                alert("초기화 실패: API 키가 잘못되었거나 로드되지 않았습니다.");
-                return;
-            }
-
-            // 2. 공유하기 실행 시도
+            // 카카오톡이 실행되도록 시도합니다.
             try {
                 Kakao.Share.sendDefault({
                     objectType: 'feed',
@@ -429,19 +417,13 @@
                             },
                         },
                     ],
-                    // 성공/실패 여부 확인
-                    success: function(response) {
-                        alert("공유 성공!");
-                    },
-                    fail: function(error) {
-                        alert("공유 실패! 에러: " + JSON.stringify(error));
-                    },
                 });
-            } catch (err) {
-                alert("실행 중 에러 발생: " + err);
+            } catch (e) {
+                // 에러가 나면 조용히 넘어갑니다.
             }
         }
     </script>
 </body>
 </html>
+
 
