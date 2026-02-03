@@ -397,35 +397,51 @@
             });
         }
 
-        // [기능] 카카오톡 공유
+// [수정된 디버깅용 공유 함수]
         function shareKakao() {
+            // 1. 버튼 클릭 확인
+            alert("버튼이 눌렸습니다!");
+
             if (!Kakao.isInitialized()) {
-                alert("카카오톡 공유 기능을 사용하려면 API 키 설정이 필요합니다.\n(현재는 링크 복사 기능만 사용 가능합니다)");
+                alert("초기화 실패: API 키가 잘못되었거나 로드되지 않았습니다.");
                 return;
             }
 
-            Kakao.Share.sendDefault({
-                objectType: 'feed',
-                content: {
-                    title: `나의 투자 성향은? ${currentResultData.title}`,
-                    description: currentResultData.desc,
-                    imageUrl: 'https://cdn-icons-png.flaticon.com/512/2910/2910312.png', // 썸네일 이미지
-                    link: {
-                        mobileWebUrl: window.location.href,
-                        webUrl: window.location.href,
-                    },
-                },
-                buttons: [
-                    {
-                        title: '테스트 결과 보기',
+            // 2. 공유하기 실행 시도
+            try {
+                Kakao.Share.sendDefault({
+                    objectType: 'feed',
+                    content: {
+                        title: `나의 투자 성향은? ${currentResultData.title}`,
+                        description: currentResultData.desc,
+                        imageUrl: 'https://cdn-icons-png.flaticon.com/512/2910/2910312.png',
                         link: {
                             mobileWebUrl: window.location.href,
                             webUrl: window.location.href,
                         },
                     },
-                ],
-            });
+                    buttons: [
+                        {
+                            title: '테스트 결과 보기',
+                            link: {
+                                mobileWebUrl: window.location.href,
+                                webUrl: window.location.href,
+                            },
+                        },
+                    ],
+                    // 성공/실패 여부 확인
+                    success: function(response) {
+                        alert("공유 성공!");
+                    },
+                    fail: function(error) {
+                        alert("공유 실패! 에러: " + JSON.stringify(error));
+                    },
+                });
+            } catch (err) {
+                alert("실행 중 에러 발생: " + err);
+            }
         }
     </script>
 </body>
 </html>
+
