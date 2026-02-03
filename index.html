@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ETF 투자 성향 테스트 (MBTI)</title>
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js" integrity="sha384-l+xbElFSnP5k7wFIFw2ywUt4b+HrQeR/i8gJ0Yhnd/y2sk3Ol362XACKx3L0pS4R" crossorigin="anonymous"></script>
+    
     <style>
-        /* [스타일 시트] 디자인을 담당하는 부분 */
+        /* [스타일 시트] */
         :root {
             --primary-color: #007bff;
             --bg-color: #f1f3f5;
             --text-color: #333;
             --accent-color: #e7f1ff;
+            --kakao-color: #FEE500; /* 카카오 노란색 */
         }
 
         body {
@@ -19,8 +22,7 @@
             color: var(--text-color);
             margin: 0;
             padding: 20px;
-            /* 하단 고정 광고가 내용을 가리지 않도록 여백 추가 */
-            padding-bottom: 100px;
+            padding-bottom: 100px; /* 하단 광고 여백 */
             display: flex;
             justify-content: center;
             align-items: flex-start;
@@ -42,7 +44,6 @@
         h1 { font-size: 1.6rem; margin-bottom: 10px; color: #2c3e50; font-weight: 800; }
         .subtitle { color: #666; font-size: 1rem; margin-bottom: 20px; line-height: 1.5; }
 
-        /* 면책 조항 스타일 */
         .disclaimer {
             font-size: 0.8rem;
             color: #888;
@@ -54,7 +55,6 @@
             border: 1px solid #eee;
         }
 
-        /* 버튼 스타일 */
         .btn {
             display: block;
             width: 100%;
@@ -87,14 +87,43 @@
             box-shadow: 0 6px 8px rgba(0,123,255,0.4);
         }
 
-        /* 화살표 애니메이션 */
+        /* [추가] 공유 버튼 스타일 */
+        .share-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .btn-share {
+            flex: 1;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: opacity 0.2s;
+        }
+        .btn-kakao {
+            background-color: var(--kakao-color);
+            color: #3c1e1e; /* 카카오 갈색 글씨 */
+        }
+        .btn-link {
+            background-color: #495057;
+            color: white;
+        }
+        .btn-share:hover { opacity: 0.9; }
+
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
             40% {transform: translateY(-5px);}
             60% {transform: translateY(-3px);}
         }
 
-        /* 정보성 글 섹션 스타일 */
         .info-section {
             text-align: left;
             margin-top: 50px;
@@ -117,119 +146,31 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.03);
             transition: transform 0.2s;
         }
-        .info-article:hover {
-            transform: translateY(-2px);
-        }
-        .info-article h3 {
-            font-size: 1.15rem;
-            color: var(--primary-color);
-            margin-top: 0;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-        .info-article p {
-            font-size: 0.95rem;
-            color: #555;
-            line-height: 1.7;
-            word-break: keep-all;
-            margin-bottom: 15px;
-        }
-        .info-article strong {
-            color: #333;
-            background: linear-gradient(to top, #ffeb3b 20%, transparent 20%);
-            font-weight: bold;
-        }
+        .info-article:hover { transform: translateY(-2px); }
+        .info-article h3 { font-size: 1.15rem; color: var(--primary-color); margin-top: 0; margin-bottom: 15px; font-weight: 700; }
+        .info-article p { font-size: 0.95rem; color: #555; line-height: 1.7; word-break: keep-all; margin-bottom: 15px; }
+        .info-article strong { color: #333; background: linear-gradient(to top, #ffeb3b 20%, transparent 20%); font-weight: bold; }
 
-        /* 진행바 */
-        .progress-container {
-            width: 100%;
-            background-color: #e9ecef;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            height: 10px;
-            overflow: hidden;
-        }
-        .progress-bar {
-            height: 100%;
-            background-color: var(--primary-color);
-            width: 0%;
-            transition: width 0.3s;
-        }
+        .progress-container { width: 100%; background-color: #e9ecef; border-radius: 10px; margin-bottom: 30px; height: 10px; overflow: hidden; }
+        .progress-bar { height: 100%; background-color: var(--primary-color); width: 0%; transition: width 0.3s; }
 
-        /* 결과 화면 스타일 */
         .result-title { font-size: 1.8rem; font-weight: 800; color: var(--primary-color); margin-top: 20px; margin-bottom: 10px; }
         .result-desc { font-size: 0.95rem; line-height: 1.6; color: #444; text-align: left; background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 10px;}
         
-        .tag-container {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 30px;
-        }
-        .tag {
-            background-color: var(--accent-color);
-            color: var(--primary-color);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
+        .tag-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 30px; }
+        .tag { background-color: var(--accent-color); color: var(--primary-color); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
 
-        /* ETF 테이블 */
-        .etf-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            font-size: 0.9rem;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 0 0 1px #eee;
-        }
-        .etf-table th, .etf-table td {
-            padding: 14px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
+        .etf-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px #eee; }
+        .etf-table th, .etf-table td { padding: 14px; text-align: left; border-bottom: 1px solid #eee; }
         .etf-table th { background-color: #f8f9fa; font-weight: bold; text-align: center; color: #495057;}
         .etf-table td.center { text-align: center; font-weight: bold; color: #666; width: 18%; vertical-align: middle; }
         .etf-name { font-weight: bold; color: #333; display: block; margin-bottom: 5px; font-size: 1rem;}
         .etf-detail { font-size: 0.85rem; color: #666; line-height: 1.4; }
 
-        /* 광고 박스 (일반) */
-        .ad-box {
-            width: 100%;
-            min-height: 100px;
-            background-color: #f8f9fa;
-            border: 1px dashed #ced4da;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #adb5bd;
-            margin: 30px 0;
-            font-size: 0.85rem;
-            border-radius: 10px;
-        }
+        .ad-box { width: 100%; min-height: 100px; background-color: #f8f9fa; border: 1px dashed #ced4da; display: flex; justify-content: center; align-items: center; color: #adb5bd; margin: 30px 0; font-size: 0.85rem; border-radius: 10px; }
 
-        /* [하단 고정 광고 영역 스타일] */
-        .fixed-bottom-ad {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 70px; /* 광고 높이 */
-            background-color: #fff;
-            border-top: 1px solid #e0e0e0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .fixed-ad-placeholder {
-            font-size: 0.8rem;
-            color: #aaa;
-        }
+        .fixed-bottom-ad { position: fixed; bottom: 0; left: 0; width: 100%; height: 70px; background-color: #fff; border-top: 1px solid #e0e0e0; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 9999; display: flex; justify-content: center; align-items: center; }
+        .fixed-ad-placeholder { font-size: 0.8rem; color: #aaa; }
 
         .hidden { display: none; }
     </style>
@@ -262,49 +203,23 @@
                 
                 <div class="info-article">
                     <h3>1. 주식 초보자, 왜 'ETF'로 시작해야 할까요?</h3>
-                    <p>
-                        주식 투자를 처음 시작하는 분들이 가장 많이 하는 고민은 "도대체 어떤 종목을 사야 할까?"입니다. 삼성전자가 좋다고 해서 샀는데 떨어지고, 옆 사람이 추천해 준 종목을 샀다가 상장폐지 걱정을 하기도 합니다. 이런 고민을 한 방에 해결해 주는 도구가 바로 <strong>ETF(상장지수펀드)</strong>입니다.
-                    </p>
-                    <p>
-                        <strong>첫째, 뷔페 같은 분산 투자 효과입니다.</strong><br>
-                        ETF는 하나의 기업에 투자하는 것이 아니라, 수십 개에서 수백 개의 우량 기업을 한 바구니에 담은 '종합 선물 세트'입니다. 예를 들어 'KODEX 200'이라는 ETF를 1주만 사도, 삼성전자, SK하이닉스, 네이버 등 대한민국 대표 기업 200개에 분산 투자하는 효과를 얻습니다. 개별 기업 하나가 망해도 내 계좌는 안전합니다.
-                    </p>
-                    <p>
-                        <strong>둘째, 투명하고 저렴합니다.</strong><br>
-                        일반 펀드는 수수료가 비싸고 내 돈이 어디에 투자되는지 알기 어렵습니다. 반면 ETF는 커피 한 잔 값의 수수료로 스마트폰에서 언제든지 사고팔 수 있습니다. 초보자가 시장의 성장을 믿고 장기 투자하기에 이보다 완벽한 도구는 없습니다.
-                    </p>
+                    <p>주식 투자를 처음 시작하는 분들이 가장 많이 하는 고민은 "도대체 어떤 종목을 사야 할까?"입니다. 이런 고민을 한 방에 해결해 주는 도구가 바로 <strong>ETF(상장지수펀드)</strong>입니다.</p>
+                    <p><strong>첫째, 뷔페 같은 분산 투자 효과입니다.</strong><br>ETF는 수십 개에서 수백 개의 우량 기업을 한 바구니에 담은 '종합 선물 세트'입니다. 예를 들어 'KODEX 200' 1주를 사면 대한민국 대표 기업 200개에 분산 투자하는 효과를 얻습니다.</p>
+                    <p><strong>둘째, 투명하고 저렴합니다.</strong><br>일반 펀드보다 수수료가 훨씬 저렴하며, 스마트폰으로 언제든지 즉시 사고팔 수 있습니다. 초보자가 시장의 성장을 믿고 장기 투자하기에 가장 완벽한 도구입니다.</p>
                 </div>
 
                 <div class="info-article">
                     <h3>2. 잠자는 동안에도 돈이 벌리는 '배당과 복리의 마법'</h3>
-                    <p>
-                        아인슈타인은 "복리는 세계 8대 불가사의"라고 말했습니다. 투자의 세계에서 부자가 되는 공식은 간단합니다. <strong>'좋은 자산을 사서, 거기서 나오는 수익을 다시 재투자하는 것'</strong>입니다. 이것이 바로 눈덩이 효과(Snowball Effect)입니다.
-                    </p>
-                    <p>
-                        많은 분들이 주식 투자를 '싸게 사서 비싸게 파는 차익 실현'으로만 생각합니다. 하지만 진정한 고수들은 <strong>'배당(Dividend)'</strong>에 주목합니다. 기업이 번 돈을 주주들에게 나눠주는 배당금을 받아서, 소고기를 사 먹는 게 아니라 다시 그 주식을 사는 데 사용해보세요.
-                    </p>
-                    <p>
-                        예를 들어, 연 5%의 배당을 주는 ETF에 투자하고 그 배당금을 계속 재투자한다고 가정해 봅시다. 원금의 크기는 시간이 지날수록 기하급수적으로 불어납니다. 주가가 오르지 않고 횡보하더라도, 늘어난 주식 수량 덕분에 내 자산은 커집니다. 이 시스템을 만드는 것이 바로 경제적 자유로 가는 지름길입니다.
-                    </p>
+                    <p>부자가 되는 공식은 간단합니다. <strong>'좋은 자산을 사서, 거기서 나오는 수익을 다시 재투자하는 것'</strong>입니다. 이것이 바로 눈덩이 효과(Snowball Effect)입니다.</p>
+                    <p>많은 분들이 차익 실현만 생각하지만, 진정한 고수들은 <strong>'배당(Dividend)'</strong>에 주목합니다. 기업이 번 돈을 배당으로 받아 다시 그 주식을 사세요. 주가가 횡보하더라도 주식 수량이 늘어나면 내 자산은 기하급수적으로 불어납니다.</p>
                 </div>
 
                 <div class="info-article">
                     <h3>3. 수익률 10%보다 중요한 '절세 계좌' 삼총사</h3>
-                    <p>
-                        투자를 잘해서 돈을 버는 것만큼 중요한 것이 <strong>'세금을 아끼는 것'</strong>입니다. 아무리 수익이 많이 나도 세금으로 다 떼인다면 소용이 없겠죠? 해외 주식형 ETF 투자 시 아래 3가지 계좌는 선택이 아닌 필수입니다.
-                    </p>
-                    <p>
-                        <strong>① 중개형 ISA (만능 통장)</strong><br>
-                        '서민형' 가입 시 발생한 수익의 400만 원까지는 세금을 한 푼도 내지 않습니다(비과세). 일반 계좌에서 해외 ETF를 팔면 15.4%의 세금을 내야 하는 것과 비교하면 엄청난 이득입니다. 만기 자금을 연금 계좌로 옮기면 추가 세액 공제 혜택까지 받습니다.
-                    </p>
-                    <p>
-                        <strong>② 연금저축펀드</strong><br>
-                        직장인이라면 연말정산을 위해 꼭 가지고 있어야 합니다. 연간 납입액(최대 600만 원)에 대해 최대 16.5%의 세액 공제를 해줍니다. 돈을 넣기만 해도 확정 수익을 얻는 셈입니다.
-                    </p>
-                    <p>
-                        <strong>③ IRP (개인형 퇴직연금)</strong><br>
-                        연금저축펀드와 합쳐서 연간 900만 원까지 세액 공제 혜택을 받을 수 있습니다. ETF 투자는 물론 예금 같은 안전 자산도 담을 수 있어 안정적인 포트폴리오 관리가 가능합니다.
-                    </p>
+                    <p>투자를 잘하는 것만큼 중요한 것이 <strong>'세금을 아끼는 것'</strong>입니다. 해외 ETF 투자 시 아래 3가지 계좌는 필수입니다.</p>
+                    <p><strong>① 중개형 ISA (만능 통장):</strong> 200~400만 원까지 수익 비과세 혜택이 있습니다. 일반 계좌 대비 세금을 획기적으로 줄일 수 있습니다.</p>
+                    <p><strong>② 연금저축펀드:</strong> 연말정산 시 최대 16.5% 세액 공제를 받아, 돈을 넣기만 해도 확정 수익을 얻는 셈입니다.</p>
+                    <p><strong>③ IRP (퇴직연금):</strong> 연금저축과 합산하여 최대 900만 원까지 세액 공제를 받을 수 있어 노후 준비에 필수적입니다.</p>
                 </div>
             </div>
 
@@ -333,6 +248,15 @@
             <p class="subtitle" style="margin-bottom: 5px;">당신의 투자 유형은?</p>
             <div id="result-content">
                 </div>
+            
+            <div class="share-container">
+                <button class="btn-share btn-kakao" onclick="shareKakao()">
+                    🟡 카카오톡 공유
+                </button>
+                <button class="btn-share btn-link" onclick="copyLink()">
+                    🔗 링크 복사
+                </button>
+            </div>
 
             <div class="ad-box">
                 구글 애드센스 광고 영역
@@ -373,6 +297,7 @@
 
         let currentStep = 0;
         let scores = { Risk: 0, Geo: 0, Style: 0 };
+        let currentResultData = null; // 공유를 위해 현재 결과 데이터 저장
 
         const startScreen = document.getElementById("start-screen");
         const quizScreen = document.getElementById("quiz-screen");
@@ -383,6 +308,14 @@
         const btnA = document.getElementById("btn-a");
         const btnB = document.getElementById("btn-b");
         const resultContent = document.getElementById("result-content");
+
+        // [중요] 카카오톡 초기화 (본인의 JavaScript 키를 여기에 넣으세요)
+        // 키 발급 전에는 이 부분이 작동하지 않아도 링크 복사는 됩니다.
+        try {
+            Kakao.init('5c43a1e1c0daee679a9ab98273013ec2'); // <-- 여기에 키 입력
+        } catch(e) {
+            console.log("카카오키가 설정되지 않았습니다.");
+        }
 
         function startTest() {
             startScreen.classList.add("hidden");
@@ -422,9 +355,11 @@
             const typeGeo = scores.Geo >= 1 ? "W" : "K"; 
             const typeStyle = scores.Style >= 1 ? "G" : "I";
             
-            const data = results[typeRisk + "-" + typeGeo + "-" + typeStyle];
-            const tagHtml = data.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
-            const etfHtml = data.etf.map(item => `
+            // 결과를 전역 변수에 저장 (공유 기능을 위해)
+            currentResultData = results[typeRisk + "-" + typeGeo + "-" + typeStyle];
+            
+            const tagHtml = currentResultData.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+            const etfHtml = currentResultData.etf.map(item => `
                 <tr>
                     <td class="center">${item.mkt}</td>
                     <td>
@@ -435,8 +370,8 @@
             `).join('');
 
             resultContent.innerHTML = `
-                <div class="result-title">${data.title}</div>
-                <div class="result-desc">${data.desc}</div>
+                <div class="result-title">${currentResultData.title}</div>
+                <div class="result-desc">${currentResultData.desc}</div>
                 <div class="tag-container">${tagHtml}</div>
                 
                 <h3 style="margin-top:30px; color:#333; font-weight:700;">📊 맞춤형 ETF 포트폴리오</h3>
@@ -451,11 +386,46 @@
                 </table>
             `;
         }
+
+        // [기능] 링크 복사
+        function copyLink() {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+                alert("링크가 복사되었습니다! 친구들에게 공유해보세요.");
+            }).catch(err => {
+                console.error('복사 실패:', err);
+            });
+        }
+
+        // [기능] 카카오톡 공유
+        function shareKakao() {
+            if (!Kakao.isInitialized()) {
+                alert("카카오톡 공유 기능을 사용하려면 API 키 설정이 필요합니다.\n(현재는 링크 복사 기능만 사용 가능합니다)");
+                return;
+            }
+
+            Kakao.Share.sendDefault({
+                objectType: 'feed',
+                content: {
+                    title: `나의 투자 성향은? ${currentResultData.title}`,
+                    description: currentResultData.desc,
+                    imageUrl: 'https://cdn-icons-png.flaticon.com/512/2910/2910312.png', // 썸네일 이미지
+                    link: {
+                        mobileWebUrl: window.location.href,
+                        webUrl: window.location.href,
+                    },
+                },
+                buttons: [
+                    {
+                        title: '테스트 결과 보기',
+                        link: {
+                            mobileWebUrl: window.location.href,
+                            webUrl: window.location.href,
+                        },
+                    },
+                ],
+            });
+        }
     </script>
 </body>
 </html>
-// [중요] 카카오톡 초기화
-        try {
-            // 따옴표('') 안에 키를 넣어야 합니다.
-            Kakao.init('5c43a1e1c0daee679a9ab98273013ec2'); 
-        } catch(e) {}
