@@ -295,10 +295,12 @@
             "A-W-G": { title: "🚀 나스닥 로켓 탑승객", tags: ["#빅테크", "#AI반도체", "#엔비디아", "#신인류"], desc: "세상을 바꾸는 혁신 기술에 열광합니다. 빅테크 기업의 폭발적인 성장을 믿으며, 단기 변동성은 쿨하게 넘깁니다.", etf: [{mkt:"해외",name:"TIGER 미국테크TOP10",desc:"애플, 엔비디아 등 미국 빅테크 상위 10개 기업에 압축 투자합니다."},{mkt:"해외",name:"TIGER 미국필라델피아반도체",desc:"AI 시대의 쌀, 반도체 산업에 투자합니다."},{mkt:"미국",name:"QQQ (또는 SOXX)",desc:"(미국직투) 나스닥 100 지수를 추종하는 기술주 투자의 교과서입니다."}] }
         };
 
+/* [2. 변수 설정] */
         let currentStep = 0;
         let scores = { Risk: 0, Geo: 0, Style: 0 };
-        let currentResultData = null;
+        let currentResultData = null; 
 
+        // DOM 요소
         const startScreen = document.getElementById("start-screen");
         const quizScreen = document.getElementById("quiz-screen");
         const loadingScreen = document.getElementById("loading-screen");
@@ -309,11 +311,15 @@
         const btnB = document.getElementById("btn-b");
         const resultContent = document.getElementById("result-content");
 
-        // [중요] 카카오톡 초기화 (키 확인 완료됨)
+        /* [3. 카카오톡 초기화] */
         try {
             Kakao.init('5c43a1e1c0daee679a9ab98273013ec2');
-        } catch(e) {}
+            console.log("Kakao Initialized");
+        } catch(e) {
+            console.error("Kakao Init Failed", e);
+        }
 
+        /* [4. 테스트 로직 함수] */
         function startTest() {
             startScreen.classList.add("hidden");
             quizScreen.classList.remove("hidden");
@@ -352,8 +358,10 @@
             const typeGeo = scores.Geo >= 1 ? "W" : "K"; 
             const typeStyle = scores.Style >= 1 ? "G" : "I";
             
+            // 결과 데이터 저장
             currentResultData = results[typeRisk + "-" + typeGeo + "-" + typeStyle];
             
+            // HTML 생성
             const tagHtml = currentResultData.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
             const etfHtml = currentResultData.etf.map(item => `
                 <tr>
@@ -369,7 +377,6 @@
                 <div class="result-title">${currentResultData.title}</div>
                 <div class="result-desc">${currentResultData.desc}</div>
                 <div class="tag-container">${tagHtml}</div>
-                
                 <h3 style="margin-top:30px; color:#333; font-weight:700;">📊 맞춤형 ETF 포트폴리오</h3>
                 <table class="etf-table">
                     <thead>
@@ -383,7 +390,7 @@
             `;
         }
 
-        // [기능] 링크 복사
+        /* [5. 공유 기능 함수] */
         function copyLink() {
             const url = window.location.href;
             navigator.clipboard.writeText(url).then(() => {
@@ -393,9 +400,20 @@
             });
         }
 
-        // [기능] 카카오톡 공유 (알림창 제거한 깔끔한 버전)
         function shareKakao() {
-            // 카카오톡이 실행되도록 시도합니다.
+            // 1. 결과 데이터가 준비되었는지 확인
+            if (!currentResultData) {
+                alert("결과가 생성되지 않았습니다. 테스트를 먼저 완료해주세요.");
+                return;
+            }
+
+            // 2. 카카오톡 초기화 확인
+            if (!window.Kakao || !Kakao.isInitialized()) {
+                alert("카카오톡 연결에 실패했습니다. (API 키 오류 또는 초기화 실패)");
+                return;
+            }
+
+            // 3. 공유하기 실행
             try {
                 Kakao.Share.sendDefault({
                     objectType: 'feed',
@@ -418,13 +436,14 @@
                         },
                     ],
                 });
-            } catch (e) {
-                // 에러가 나면 조용히 넘어갑니다.
+            } catch (err) {
+                alert("공유 실행 중 오류 발생: " + err);
             }
         }
     </script>
 </body>
 </html>
+
 
 
 
